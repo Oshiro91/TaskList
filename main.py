@@ -7,8 +7,7 @@ st.session_state.pages = {}
 
 st.session_state.pages = {
     "Login": [
-         st.Page("./pages/main_page.py", title="Main Page", icon="🏠"),
-         st.Page("./pages/second_page.py", title="Second Page", icon="🏠"),
+         st.Page("./pages/login.py", title="login", icon="🔑")
     ],
 }
 

@@ -16,7 +16,7 @@ cur = conn.cursor()
 st.write(st.session_state.logged_user)
 
 # Execute a SELECT query to retrieve data from the users table
-cur.execute("SELECT * FROM users where name = 'Fernando'")
+cur.execute("SELECT * FROM users")
 
 # Fetch the results of the query
 results = cur.fetchall()
@@ -40,7 +40,7 @@ def login_page():
                 "👤 Usuário",
                 placeholder="Digite o usuário",
                 key="username_input"
-            ).upper()
+            )
             
             # Password input field  
             password = st.text_input(
@@ -52,9 +52,21 @@ def login_page():
 
             # Login button
             if st.button("Acessar", use_container_width=True):
-                st.session_state.logged_user = username
-                st.toast("Login bem-sucedido!", icon="✅")
-                st.rerun()
+                st.write(f"SELECT * FROM users where name = '{username}'")
+                try:
+                    cur = conn.cursor()
+                    cur.execute(f"SELECT * FROM users where name = '{username}'")
+                    results = cur.fetchone()
+                    st.write(results)
+                    if results and results[2] == password:
+                        st.success("Login bem-sucedido!", icon="✅")
+                        st.session_state.logged_user = results[1]
+                        st.rerun()
+                    else:
+                        st.error("Usuário ou senha inválidos. Tente novamente.", icon="🚫")
+                except Exception as e:
+                    results = None
+                    st.error("Usuário ou senha inválidos. Tente novamente.", icon="🚫")
 def main():
     """Main app controller"""
     # Check if user is already logged in and redirect
